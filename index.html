@@ -1,0 +1,177 @@
+
+
+<!DOCTYPE html>
+
+<html lang="pt-BR">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Soares Integrated Management</title>
+
+<style>
+
+*{box-sizing:border-box}
+
+body{margin:0;background:#0b1120;color:#e8edf7;font-family:Arial,sans-serif}
+
+header{background:#152139;padding:22px;border-bottom:2px solid #cba75b}
+
+h1{font-size:21px;margin:0;color:#e5c47d}
+
+small{color:#aab8ce}
+
+main{padding:18px;max-width:850px;margin:auto}
+
+nav{display:flex;gap:8px;overflow-x:auto;padding:14px 0}
+
+button{background:#cba75b;color:#101827;border:0;border-radius:9px;padding:12px;font-weight:bold;cursor:pointer}
+
+nav button{white-space:nowrap}
+
+section{background:#18243a;padding:18px;border-radius:13px;margin-bottom:15px}
+
+input,select{width:100%;padding:12px;margin:8px 0;background:#0d1729;color:white;border:1px solid #617089;border-radius:8px}
+
+.card{background:#24324b;padding:13px;border-radius:9px;margin:9px 0}
+
+.hidden{display:none}
+
+p{line-height:1.5}
+
+</style>
+
+</head>
+
+<body>
+
+<header>
+
+<h1>◆ SOARES INTEGRATED MANAGEMENT</h1>
+
+<small>Administração central · Demonstração</small>
+
+</header>
+
+<main>
+
+<p>Ambiente de testes. Não insira dados reais ou confidenciais.</p>
+
+<nav>
+
+<button onclick="show('home')">Painel</button>
+
+<button onclick="show('empresas')">Empresas</button>
+
+<button onclick="show('modulos')">Módulos</button>
+
+</nav>
+
+<section id="home">
+
+<h2>Painel administrativo</h2>
+
+<p>Bem-vindo à plataforma Soares.</p>
+
+<div class="card">Empresas cadastradas: <b id="total">0</b></div>
+
+<div class="card">Gestão multiempresa em desenvolvimento</div>
+
+</section>
+
+<section id="empresas" class="hidden">
+
+<h2>Cadastrar empresa</h2>
+
+<input id="nome" placeholder="Nome da empresa">
+
+<input id="setor" placeholder="Setor de atividade">
+
+<button onclick="adicionar()">Salvar empresa</button>
+
+<h3>Empresas cadastradas</h3>
+
+<div id="lista"></div>
+
+</section>
+
+<section id="modulos" class="hidden">
+
+<h2>Catálogo de módulos</h2>
+
+<div class="card">Recursos Humanos</div>
+
+<div class="card">Segurança Patrimonial</div>
+
+<div class="card">Gestão de Tarefas</div>
+
+<div class="card">Controle de Acesso</div>
+
+<div class="card">Estoque e Inventário</div>
+
+<div class="card">Relatórios e Indicadores</div>
+
+<div class="card">Gestão de Frotas — Futuro</div>
+
+</section>
+
+</main>
+
+<script>
+
+let empresas=[];
+
+try{
+
+empresas=JSON.parse(localStorage.getItem('soares_empresas')||'[]');
+
+}catch(e){empresas=[];}
+
+function show(id){
+
+document.querySelectorAll('section').forEach(s=>s.classList.add('hidden'));
+
+document.getElementById(id).classList.remove('hidden');
+
+}
+
+function adicionar(){
+
+const nome=document.getElementById('nome').value.trim();
+
+const setor=document.getElementById('setor').value.trim();
+
+if(!nome){alert('Informe o nome da empresa');return;}
+
+empresas.push({nome,setor});
+
+try{localStorage.setItem('soares_empresas',JSON.stringify(empresas));}
+
+catch(e){alert('Salvamento indisponível neste navegador');}
+
+document.getElementById('nome').value='';
+
+document.getElementById('setor').value='';
+
+atualizar();
+
+}
+
+function atualizar(){
+
+document.getElementById('total').textContent=empresas.length;
+
+document.getElementById('lista').replaceChildren();
+
+empresas.forEach(e=>{
+
+const div=document.createElement('div');
+
+div.className='card';
+
+div.textContent=e.nome+' — '+e.setor;
+
+document.getElementById('lista').appendChild(div);
